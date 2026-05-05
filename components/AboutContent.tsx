@@ -14,7 +14,7 @@ const facts = [
   { label: "EDUCATION",      value: "M.S. CS coursework · Illinois Institute of Technology" },
   { label: "LANGUAGES",      value: "Telugu (native) · English (fluent)" },
   { label: "STACK",          value: "Flutter · Next.js · FastAPI · Node.js · PostgreSQL · AWS" },
-  { label: "CURRENTLY INTO", value: "AI-first products — real-time audio, graph databases, voice UX" },
+  { label: "CURRENTLY INTO", value: "Building OweMyGod · AI-native apps · systems that solve real problems" },
 ];
 
 const tags = [
@@ -196,17 +196,13 @@ export default function AboutContent() {
           <span className={`${playfair.className} text-[17px] text-zinc-200 not-italic`}>
             complex systems
           </span>{" "}
-          fit together — from{" "}
+          fit together — the kind that stretch from a{" "}
           <span className={`${playfair.className} text-[16px] text-indigo-300 italic`}>
-            database graphs
+            single API call
           </span>
-          {" "}to{" "}
+          {" "}all the way to a{" "}
           <span className={`${playfair.className} text-[16px] text-indigo-300 italic`}>
-            real-time audio
-          </span>
-          {" "}to{" "}
-          <span className={`${playfair.className} text-[16px] text-indigo-300 italic`}>
-            mobile UX.
+            pixel on someone&apos;s screen.
           </span>{" "}
           That curiosity is probably why I ended up building full-stack products{" "}
           <span className={`${playfair.className} text-[17px] text-zinc-200 not-italic`}>
@@ -216,14 +212,32 @@ export default function AboutContent() {
 
         {/* Column 2 */}
         <p className="text-[13px]">
-          Outside of code, I think a lot about how{" "}
+          Outside of code, I think a lot about{" "}
           <span className={`${playfair.className} text-[17px] text-zinc-200 not-italic`}>
-            AI is reshaping
+            tech, AI, and culture
           </span>{" "}
-          the way people interact with software. Some people scroll social media.{" "}
+          — and how they&apos;re reshaping the way people interact with the world. Some people scroll.{" "}
           <span className={`${playfair.className} text-[16px] text-amber-300 italic`}>
-            I read model release notes.
-          </span>
+            I try to create.
+          </span>{" "}
+          I run two YouTube channels — one exploring the world of{" "}
+          <a
+            href="https://www.youtube.com/@illoktv"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`${playfair.className} text-[16px] text-indigo-300 italic underline underline-offset-2 hover:text-indigo-200 transition-colors`}
+          >
+            tech
+          </a>
+          , and one for my love of{" "}
+          <a
+            href="https://www.youtube.com/@TheArcheage"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`${playfair.className} text-[16px] text-red-400 italic underline underline-offset-2 hover:text-red-300 transition-colors`}
+          >
+            Formula 1.
+          </a>
         </p>
       </TimelineContent>
     </div>

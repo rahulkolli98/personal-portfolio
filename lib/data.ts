@@ -12,11 +12,14 @@ export interface Experience {
 
 export interface Project {
   name: string;
+  slug: string;
   stack: string[];
   bullets: string[];
   imageSrc?: string;
   href?: string;
+  githubUrl?: string;
   meta?: string;
+  description?: string;
 }
 
 export interface SkillGroup {
@@ -102,10 +105,13 @@ export const experiences: Experience[] = [
 export const projects: Project[] = [
   {
     name: "CodeForGood — Mesa Farm Volunteer App",
+    slug: "codeforgood-mesa",
     stack: ["Flutter", "Node.js", "Express.js", "MySQL", "AWS Amplify"],
     imageSrc: "/projects/mesa1.jpg",
     href: "#",
+    githubUrl: "https://github.com/rahulkolli98",
     meta: "Flutter • AWS Amplify",
+    description: "A volunteer management platform built for Mesa Farm during a CodeForGood hackathon. Supports 800+ volunteers with onboarding, event management, and an admin dashboard.",
     bullets: [
       "Built volunteer onboarding system in Flutter/Dart for 800+ users with multi-step authentication (98% completion rate), profile setup, and role-based event access.",
       "Created admin dashboard with modular widgets for event creation, tracking 800+ volunteers, managing 50+ documents, and 99.5% uptime.",
@@ -115,20 +121,26 @@ export const projects: Project[] = [
   },
   {
     name: "Mood-Based Movie / Book Recommender",
+    slug: "mood-recommender",
     stack: ["Next.js", "Python", "Hugging Face"],
     imageSrc: "/projects/movie-book-recommendation1.png",
     href: "#",
+    githubUrl: "https://github.com/rahulkolli98",
     meta: "Next.js • Hugging Face",
+    description: "A web app that recommends movies and books based on your current mood, powered by Hugging Face models and an adaptive recommendation algorithm.",
     bullets: [
       "Created web app recommending movies/books based on mood selection using an adaptive algorithm with Next.js and Hugging Face models.",
     ],
   },
   {
     name: "Restaurant Menu Decoder",
+    slug: "menu-decoder",
     stack: ["Next.js", "Python", "OAuth", "Google Vision", "OCR", "MongoDB"],
     imageSrc: "/projects/menu-decoder1.png",
     href: "#",
+    githubUrl: "https://github.com/rahulkolli98",
     meta: "Next.js • Google Vision",
+    description: "A web app that uses Google Vision OCR to scan restaurant menus and instantly flag allergens and dietary restrictions — for the 32% of diners who spend 15+ minutes vetting menus.",
     bullets: [
       "Built Next.js web app for dietary restriction users with Zod validation on backend API routes, enhancing data security.",
       "Integrated Google Vision OCR and MongoDB for instant menu analysis, targeting 32% of diners who spend 15+ minutes vetting menus.",
@@ -137,10 +149,13 @@ export const projects: Project[] = [
   },
   {
     name: "Shopping List Mobile App",
+    slug: "shopping-list",
     stack: ["React Native", "Expo", "Supabase", "TypeScript", "OAuth"],
-    imageSrc: "/projects/Screenshot 2026-02-28 174132.png",
+    imageSrc: "/projects/shopping list.png",
     href: "#",
-    meta: "React Native • Supabase",
+    githubUrl: "https://github.com/rahulkolli98",
+    meta: "React Native • Expo",
+    description: "A collaborative mobile shopping list app with real-time sync, push notifications, and role-based access — built for iOS and Android with React Native, Expo, and Supabase.",
     bullets: [
       "Developed collaborative shopping list app with React Native/Expo and TypeScript, implementing real-time sync via Supabase for iOS/Android.",
       "Deployed push notification system using Supabase Edge Functions and Expo Push Service (95% delivery rate) for out-of-stock alerts.",
@@ -148,11 +163,31 @@ export const projects: Project[] = [
     ],
   },
   {
+    name: "OweMyGod",
+    slug: "owemygod",
+    stack: ["Next.js", "Node.js", "Express.js", "Supabase", "PostgreSQL"],
+    imageSrc: "/projects/owemygod.png",
+    href: "https://owemygod.com",
+    githubUrl: "",
+    meta: "Next.js • Express.js • Supabase • PostgreSQL",
+    description: "A group expense tracker built because Splitwise's free plan wasn't cutting it. A Simple, Lovable, Complete 1.0 — no overengineering, just something that works.",
+    bullets: [
+      "Built because Splitwise's free plan limits expenses — expenses forgotten in the moment are expenses lost forever.",
+      "A Simple, Lovable, Complete (SLC) 1.0 that solves the actual problem: tracking group expenses cleanly without overengineering.",
+      "Implemented authentication, role-based access, and real-time balance tracking using Supabase/PostgreSQL and a Next.js frontend.",
+      "Built with GitHub Copilot throughout — focused on practical tooling, real-world usability, and shipping fast over feature bloat.",
+      "Roadmap includes Splitwise data import, percentage-based splits, and payment trigger integrations.",
+    ],
+  },
+  {
     name: "Fake News Detection",
+    slug: "fake-news-detection",
     stack: ["Python", "Scikit-learn", "Pandas", "NumPy"],
     imageSrc: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=900&q=80",
     href: "#",
+    githubUrl: "https://github.com/rahulkolli98",
     meta: "Python • Scikit-learn",
+    description: "A machine learning model that classifies news articles as real or fake with 85.08% accuracy using Random Forest and NLP techniques.",
     bullets: [
       "Created machine learning model classifying news articles with 85.08% accuracy using Random Forest, Scikit-learn, and evaluation via precision/recall/F1 score.",
     ],

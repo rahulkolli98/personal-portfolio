@@ -2,15 +2,19 @@
 
 import { useState, useRef } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "next/link";
+import { ChevronLeft, ChevronRight, ExternalLink, Github } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { projects } from "@/lib/data";
 
 const ITEMS = projects.map((p) => ({
   title: p.name,
+  slug: p.slug,
   meta: p.meta ?? "",
   description: p.bullets[0],
   src: p.imageSrc ?? "",
+  href: p.href,
+  githubUrl: p.githubUrl,
 }));
 
 // 16:9 cards
@@ -174,25 +178,59 @@ export default function ProjectsRail() {
                   {item.description}
                 </p>
 
-                {/* prev / counter / next pill */}
-                <div className="flex items-center rounded-full bg-zinc-800/80 backdrop-blur-sm border border-zinc-700/40 px-1 py-1 self-start sm:self-auto flex-shrink-0">
-                  <button
-                    onClick={prev}
-                    aria-label="Previous project"
-                    className="rounded-full p-2 text-zinc-400 hover:text-white hover:bg-zinc-700/60 transition-colors"
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </button>
-                  <span className="min-w-[3rem] text-center text-sm font-medium text-zinc-300 tabular-nums">
-                    {index + 1} / {ITEMS.length}
-                  </span>
-                  <button
-                    onClick={next}
-                    aria-label="Next project"
-                    className="rounded-full p-2 text-zinc-400 hover:text-white hover:bg-zinc-700/60 transition-colors"
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                  </button>
+                <div className="flex flex-col items-start gap-3 flex-shrink-0">
+                  {/* Detail + external links */}
+                  <div className="flex items-center gap-2">
+                    <Link
+                      href={`/projects/${item.slug}`}
+                      className="inline-flex items-center gap-1.5 rounded-md border border-indigo-500/50 bg-indigo-500/10 px-3 py-1.5 text-xs font-medium text-indigo-300 hover:bg-indigo-500/20 transition-colors"
+                    >
+                      View Details
+                    </Link>
+                    {item.githubUrl && (
+                      <a
+                        href={item.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 rounded-md border border-zinc-700 bg-zinc-900/60 px-3 py-1.5 text-xs font-medium text-zinc-300 hover:border-zinc-500 hover:text-zinc-100 transition-colors"
+                      >
+                        <Github className="h-3.5 w-3.5" />
+                        GitHub
+                      </a>
+                    )}
+                    {item.href && item.href !== "#" && (
+                      <a
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 rounded-md border border-zinc-700 bg-zinc-900/60 px-3 py-1.5 text-xs font-medium text-zinc-300 hover:border-zinc-500 hover:text-zinc-100 transition-colors"
+                      >
+                        <ExternalLink className="h-3.5 w-3.5" />
+                        Live
+                      </a>
+                    )}
+                  </div>
+
+                  {/* prev / counter / next pill */}
+                  <div className="inline-flex items-center rounded-full bg-zinc-800/80 backdrop-blur-sm border border-zinc-700/40 px-1 py-1">
+                    <button
+                      onClick={prev}
+                      aria-label="Previous project"
+                      className="rounded-full p-2 text-zinc-400 hover:text-white hover:bg-zinc-700/60 transition-colors"
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </button>
+                    <span className="px-1 text-center text-sm font-medium text-zinc-300 tabular-nums">
+                      {index + 1} / {ITEMS.length}
+                    </span>
+                    <button
+                      onClick={next}
+                      aria-label="Next project"
+                      className="rounded-full p-2 text-zinc-400 hover:text-white hover:bg-zinc-700/60 transition-colors"
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
             </motion.div>

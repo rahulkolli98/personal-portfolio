@@ -15,7 +15,7 @@ export default function Home() {
   return (
     <div className="flex min-h-[80vh] flex-col justify-center">
       <motion.p {...anim(0)} className="mb-4 text-xs font-medium uppercase tracking-[0.25em] text-indigo-400" style={{ fontFamily: "var(--font-jetbrains-mono)" }}>
-        Full Stack Developer
+        Product-Focused Builder
       </motion.p>
 
       <motion.h1 {...anim(0.1)} className="mb-2 text-[clamp(3rem,10vw,7rem)] font-black leading-none tracking-tight text-zinc-100">
@@ -27,8 +27,8 @@ export default function Home() {
       </motion.h1>
 
       <motion.p {...anim(0.32)} className="mb-10 max-w-lg text-base leading-relaxed text-zinc-400">
-        Building production-grade full-stack systems — real-time voice AI,
-        microservices, mobile apps, and data pipelines.
+        I build useful software end-to-end, with a focus on solving real problems
+        fast and cleanly across AI, mobile, and cloud systems.
       </motion.p>
 
       <motion.div {...anim(0.44)} className="flex flex-wrap gap-4">
