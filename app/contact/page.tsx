@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { contact } from "@/lib/data";
 import { Github, Mail, Linkedin } from "lucide-react";
 import Link from "next/link";
-import { GithubActivityFeed } from "@/components/GithubActivityFeed";
+import { GitHubContributionsCalendar } from "@/components/GitHubContributionsCalendar";
 
 export const metadata: Metadata = {
   title: "Contact | Rahul Kolli",
@@ -11,13 +11,14 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="max-w-xl">
-      <h1 className="mb-2 text-3xl font-bold tracking-tight text-zinc-100">Contact</h1>
-      <p className="mb-10 text-zinc-500">
-        Feel free to reach out — I&apos;m open to new opportunities and collaborations.
-      </p>
+    <div className="max-w-5xl">
+      <div className="max-w-xl">
+        <h1 className="mb-2 text-3xl font-bold tracking-tight text-zinc-100">Contact</h1>
+        <p className="mb-10 text-zinc-500">
+          Feel free to reach out — I&apos;m open to new opportunities and collaborations.
+        </p>
 
-      <div className="space-y-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:max-w-4xl">
         {contact.email && (
           <a
             href={`mailto:${contact.email}`}
@@ -44,7 +45,7 @@ export default function ContactPage() {
           </div>
         </Link>
 
-        {contact.linkedinUrl && (
+          {contact.linkedinUrl && (
           <Link
             href={contact.linkedinUrl}
             target="_blank"
@@ -57,10 +58,14 @@ export default function ContactPage() {
               <p className="text-sm font-medium text-zinc-200">{contact.linkedin}</p>
             </div>
           </Link>
-        )}
+          )}
+        </div>
       </div>
 
-      <GithubActivityFeed username={contact.github} />
+      <section className="mt-12">
+        <h2 className="mb-4 text-lg font-semibold text-zinc-100">Contribution Graph</h2>
+        <GitHubContributionsCalendar />
+      </section>
     </div>
   );
 }

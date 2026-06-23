@@ -20,18 +20,18 @@ interface OpenRouterResponse {
 // ─── Environment Validation ───────────────────────────────────────────────
 
 function validateEnvironment(): { apiKey: string; model: string } {
-  const apiKey = process.env.NEXT_PUBLIC_OPENROUTER_API_KEY;
-  const model = process.env.NEXT_PUBLIC_OPENROUTER_MODEL;
+  const apiKey = process.env.OPENROUTER_API_KEY;
+  const model = process.env.OPENROUTER_MODEL;
 
   if (!apiKey) {
     throw new Error(
-      'Missing NEXT_PUBLIC_OPENROUTER_API_KEY in environment variables'
+      'Missing OPENROUTER_API_KEY in environment variables'
     );
   }
 
   if (!model) {
     throw new Error(
-      'Missing NEXT_PUBLIC_OPENROUTER_MODEL in environment variables'
+      'Missing OPENROUTER_MODEL in environment variables'
     );
   }
 

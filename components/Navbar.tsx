@@ -62,32 +62,6 @@ export default function Navbar() {
           );
         })}
 
-        {/* Center Visitor Counter */}
-        <div className="relative mx-2">
-          <button
-            onClick={() => setShowVisitorTooltip(!showVisitorTooltip)}
-            className="rounded-full px-3 py-1 text-sm transition-colors text-zinc-400 hover:bg-zinc-800/60 hover:text-zinc-200"
-          >
-            <VisitorCounter />
-          </button>
-
-          <AnimatePresence>
-            {showVisitorTooltip && (
-              <motion.div
-                initial={{ opacity: 0, y: -5 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -5 }}
-                transition={{ duration: 0.2 }}
-                className="absolute top-10 left-1/2 -translate-x-1/2 whitespace-nowrap bg-zinc-800 text-zinc-100 px-3 py-1 rounded-full text-xs border border-zinc-700/60"
-              >
-                Total Visitor Count
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        <div className="mx-1 h-4 w-px bg-zinc-700" />
-
         {navLinks.slice(3).map((link) => {
           const isActive = pathname.startsWith(link.href);
           return (
@@ -104,6 +78,31 @@ export default function Navbar() {
             </Link>
           );
         })}
+
+        <div className="mx-1 h-4 w-px bg-zinc-700" />
+
+        <div className="relative mx-1">
+          <button
+            onClick={() => setShowVisitorTooltip(!showVisitorTooltip)}
+            className="rounded-full px-3 py-1 text-sm transition-colors text-zinc-400 hover:bg-zinc-800/60 hover:text-zinc-200"
+          >
+            <VisitorCounter />
+          </button>
+
+          <AnimatePresence>
+            {showVisitorTooltip && (
+              <motion.div
+                initial={{ opacity: 0, y: -5 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -5 }}
+                transition={{ duration: 0.2 }}
+                className="absolute top-10 right-0 whitespace-nowrap bg-zinc-800 text-zinc-100 px-3 py-1 rounded-full text-xs border border-zinc-700/60"
+              >
+                Total Visitor Count
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </nav>
 
       {/* Mobile Navbar */}
