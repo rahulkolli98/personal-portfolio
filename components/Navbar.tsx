@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { VisitorCounter } from "./VisitorCounter";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -43,6 +44,10 @@ export default function Navbar() {
             </Link>
           );
         })}
+
+        <div className="mx-1 h-4 w-px bg-zinc-700" />
+
+        <VisitorCounter />
       </nav>
     </header>
   );

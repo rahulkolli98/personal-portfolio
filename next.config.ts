@@ -4,6 +4,7 @@ import type { NextConfig } from "next";
 const BLOG_URL = "https://blog.rahulkolli.dev";
 
 const nextConfig: NextConfig = {
+  serverExternalPackages: ["ably"],
   images: {
     remotePatterns: [
       {

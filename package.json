@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.5.19",
+    "ably": "^2.23.0",
     "clsx": "^2.1.1",
     "framer-motion": "^12.34.3",
     "gray-matter": "^4.0.3",
@@ -17,8 +18,10 @@
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "react-globe.gl": "^2.32.0",
     "remark": "^15.0.1",
     "remark-html": "^16.0.1",
+    "three": "^0.181.1",
     "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {

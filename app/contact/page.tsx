@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { contact } from "@/lib/data";
 import { Github, Mail, Linkedin } from "lucide-react";
 import Link from "next/link";
+import { GithubActivityFeed } from "@/components/GithubActivityFeed";
 
 export const metadata: Metadata = {
   title: "Contact | Rahul Kolli",
@@ -58,6 +59,8 @@ export default function ContactPage() {
           </Link>
         )}
       </div>
+
+      <GithubActivityFeed username={contact.github} />
     </div>
   );
 }
