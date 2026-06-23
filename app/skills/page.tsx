@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
-import TrustedBy from "@/components/TrustedBy";
+import SkillsOrbit from "@/components/ui/skills-orbit";
 
 export const metadata: Metadata = {
   title: "Skills | Rahul Kolli",
-  description: "Technical skills and companies Rahul Kolli has worked with.",
+  description: "Technical skills of Rahul Kolli across languages, frameworks, databases, cloud, and AI/ML.",
 };
 
 export default function SkillsPage() {
   return (
     <div>
-      <h1 className="mb-2 text-3xl font-bold tracking-tight text-zinc-100">Experience</h1>
-      <p className="mb-8 text-zinc-500">Companies I&apos;ve contributed to.</p>
-      <TrustedBy />
+      <h1 className="mb-2 text-3xl font-bold tracking-tight text-zinc-100">Skills</h1>
+      <p className="mb-8 text-zinc-500">Grouped by category.</p>
+      <SkillsOrbit />
     </div>
   );
 }
