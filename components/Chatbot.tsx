@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { MessageCircle, X, Send, Loader } from 'lucide-react';
 import { useRateLimit } from '@/hooks/useRateLimit';
 import { useConversationStorage } from '@/hooks/useConversationStorage';
-import { callOpenRouterChatbot } from '@/lib/openrouter';
+import { callOpenRouterChatbot, type ChatMessage } from '@/lib/openrouter';
 
 // ─── Types ────────────────────────────────────────────────────────────────
 
@@ -104,9 +104,9 @@ export function Chatbot() {
 
     try {
       // Prepare conversation history for API
-      const apiHistory = [
+      const apiHistory: ChatMessage[] = [
         ...getHistoryForAPI(),
-        { role: 'user', content: userMessage },
+        { role: 'user' as const, content: userMessage },
       ];
 
       // Call OpenRouter API
