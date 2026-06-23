@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { contact } from "@/lib/data";
-import { Github, Mail } from "lucide-react";
+import { Github, Mail, Linkedin } from "lucide-react";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -42,6 +42,21 @@ export default function ContactPage() {
             <p className="text-sm font-medium text-zinc-200">{contact.githubUrl.replace("https://", "")}</p>
           </div>
         </Link>
+
+        {contact.linkedinUrl && (
+          <Link
+            href={contact.linkedinUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-4 rounded-lg border border-zinc-800 bg-zinc-900/60 px-5 py-4 text-zinc-300 transition-all hover:border-indigo-500/50 hover:shadow-[0_0_14px_rgba(99,102,241,0.15)]"
+          >
+            <Linkedin size={20} className="shrink-0 text-indigo-500" />
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500" style={{ fontFamily: "var(--font-jetbrains-mono)" }}>LinkedIn</p>
+              <p className="text-sm font-medium text-zinc-200">{contact.linkedin}</p>
+            </div>
+          </Link>
+        )}
       </div>
     </div>
   );

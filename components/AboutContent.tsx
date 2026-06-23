@@ -80,7 +80,7 @@ export default function AboutContent() {
           animationNum={2}
           timelineRef={sectionRef}
           customVariants={fadeVariants}
-          className="text-indigo-400 border-2 border-indigo-500/50 border-dotted inline px-1.5 rounded-md"
+          className={`${playfair.className} text-[37px] sm:text-[49px] text-indigo-400 border-2 border-indigo-500/50 border-dotted inline px-1.5 rounded-md`}
         >
           full-stack
         </TimelineContent>{" "}
@@ -90,7 +90,7 @@ export default function AboutContent() {
           animationNum={3}
           timelineRef={sectionRef}
           customVariants={fadeVariants}
-          className="text-amber-400 border-2 border-amber-500/50 border-dotted inline px-1.5 rounded-md"
+          className={`${playfair.className} text-[37px] sm:text-[49px] text-amber-400 border-2 border-amber-500/50 border-dotted inline px-1.5 rounded-md`}
         >
           scale,
         </TimelineContent>{" "}
@@ -100,7 +100,7 @@ export default function AboutContent() {
           animationNum={4}
           timelineRef={sectionRef}
           customVariants={fadeVariants}
-          className="text-emerald-400 border-2 border-emerald-500/50 border-dotted inline px-1.5 rounded-md"
+          className={`${playfair.className} text-[37px] sm:text-[49px] text-emerald-400 border-2 border-emerald-500/50 border-dotted inline px-1.5 rounded-md`}
         >
           end to end.
         </TimelineContent>
@@ -220,24 +220,19 @@ export default function AboutContent() {
           <span className={`${playfair.className} text-[16px] text-amber-300 italic`}>
             I try to create.
           </span>{" "}
-          I run two YouTube channels — one exploring the world of{" "}
-          <a
-            href="https://www.youtube.com/@illoktv"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`${playfair.className} text-[16px] text-indigo-300 italic underline underline-offset-2 hover:text-indigo-200 transition-colors`}
-          >
-            tech
-          </a>
-          , and one for my love of{" "}
+          When I&apos;m not building platforms, you&apos;ll find me on my{" "}
           <a
             href="https://www.youtube.com/@TheArcheage"
             target="_blank"
             rel="noopener noreferrer"
             className={`${playfair.className} text-[16px] text-red-400 italic underline underline-offset-2 hover:text-red-300 transition-colors`}
           >
+            YouTube channel
+          </a>{" "}
+          exploring my passion for{" "}
+          <span className={`${playfair.className} text-[16px] text-red-400 italic`}>
             Formula 1.
-          </a>
+          </span>
         </p>
       </TimelineContent>
     </div>

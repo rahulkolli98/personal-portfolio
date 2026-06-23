@@ -31,6 +31,8 @@ export interface ContactInfo {
   name: string;
   github: string;
   githubUrl: string;
+  linkedin?: string;
+  linkedinUrl?: string;
   email: string;
 }
 
@@ -40,6 +42,8 @@ export const contact: ContactInfo = {
   name: "Rahul Kolli",
   github: "rahulkolli98",
   githubUrl: "https://github.com/rahulkolli98",
+  linkedin: "Rahul Kolli",
+  linkedinUrl: "https://www.linkedin.com/in/rahul-kolli-aa8785141",
   email: "", // add when ready to publish
 };
 

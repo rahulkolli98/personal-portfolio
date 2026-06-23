@@ -54,7 +54,7 @@ export default function Home() {
           href="https://blog.rahulkolli.dev"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-900 px-5 py-2.5 text-sm font-medium text-zinc-300 transition-all duration-300 hover:border-zinc-500 hover:text-zinc-100 hover:shadow-[0_0_14px_rgba(255,255,255,0.05)]"
+          className="hidden flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-900 px-5 py-2.5 text-sm font-medium text-zinc-300 transition-all duration-300 hover:border-zinc-500 hover:text-zinc-100 hover:shadow-[0_0_14px_rgba(255,255,255,0.05)]"
           style={{ fontFamily: "var(--font-jetbrains-mono)" }}
         >
           Blog
