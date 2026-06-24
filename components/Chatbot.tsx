@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { MessageCircle, X, Send, Loader } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { MessageCircle, X, Send, Loader, Mic, MicOff, Trash2 } from 'lucide-react';
 import { useRateLimit } from '@/hooks/useRateLimit';
 import { useConversationStorage } from '@/hooks/useConversationStorage';
 import { callOpenRouterChatbot, type ChatMessage } from '@/lib/openrouter';
@@ -23,6 +24,8 @@ export function Chatbot() {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [uiMessages, setUiMessages] = useState<UIMessage[]>([]);
+  const [isListening, setIsListening] = useState(false);
+  const [showClearPreview, setShowClearPreview] = useState(false);
 
   // ─── Hooks ────────────────────────────────────────────────────────────
   const { canSendMessage, getStatus } = useRateLimit(1000); // 1 second delay
@@ -38,6 +41,7 @@ export function Chatbot() {
   // ─── Refs ─────────────────────────────────────────────────────────────
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const recognitionRef = useRef<any>(null);
 
   // ─── Effects ───────────────────────────────────────────────────────────
 
@@ -67,6 +71,40 @@ export function Chatbot() {
       setTimeout(() => inputRef.current?.focus(), 100);
     }
   }, [isOpen]);
+
+  /**
+   * Initialize Web Speech API for speech-to-text.
+   */
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
+      if (SpeechRecognition && !recognitionRef.current) {
+        const recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'en-US';
+
+        recognition.onresult = (event: any) => {
+          const transcript = Array.from(event.results)
+            .map((result: any) => result[0].transcript)
+            .join('');
+          setInputValue((prev) => prev + (prev ? ' ' : '') + transcript);
+          setIsListening(false);
+        };
+
+        recognition.onerror = (event: any) => {
+          console.error('Speech recognition error:', event.error);
+          setIsListening(false);
+        };
+
+        recognition.onend = () => {
+          setIsListening(false);
+        };
+
+        recognitionRef.current = recognition;
+      }
+    }
+  }, []);
 
   // ─── Handlers ──────────────────────────────────────────────────────────
 
@@ -162,13 +200,37 @@ export function Chatbot() {
   };
 
   /**
-   * Handle clear conversation.
+   * Handle speech recognition toggle.
+   */
+  const handleToggleSpeech = () => {
+    if (!recognitionRef.current) {
+      alert('Speech recognition is not supported in your browser.');
+      return;
+    }
+
+    if (isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    } else {
+      setIsListening(true);
+      recognitionRef.current.start();
+    }
+  };
+
+  /**
+   * Handle clear conversation (show preview instead of alert).
    */
   const handleClearConversation = () => {
-    if (confirm('Clear all messages? This cannot be undone.')) {
-      clearHistory();
-      setUiMessages([]);
-    }
+    setShowClearPreview(true);
+  };
+
+  /**
+   * Confirm clear conversation.
+   */
+  const handleConfirmClear = () => {
+    clearHistory();
+    setUiMessages([]);
+    setShowClearPreview(false);
   };
 
   /**
@@ -181,33 +243,60 @@ export function Chatbot() {
   return (
     <>
       {/* Closed State: Floating Button with Tooltip */}
-      {!isOpen && (
-        <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-2 group">
-          {/* Tooltip Bubble */}
-          <div className="bg-zinc-800 text-zinc-100 px-4 py-2 rounded-full text-xs whitespace-nowrap shadow-lg border border-zinc-700 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-            Ask me about Rahul's projects & experience
-          </div>
-
-          {/* Floating Button */}
-          <button
-            onClick={() => setIsOpen(true)}
-            className="relative flex items-center justify-center w-14 h-14 rounded-full bg-indigo-500 hover:bg-indigo-600 text-white shadow-lg transition-all duration-200 hover:scale-110 active:scale-95"
-            aria-label="Open chatbot"
-            title="Ask me about my projects, experience, and skills"
+      <AnimatePresence mode="wait">
+        {!isOpen && (
+          <motion.div
+            className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-2 group"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.2 }}
           >
-            <MessageCircle size={24} />
-            {getMessageCount() > 0 && (
-              <span className="absolute -top-1 -right-1 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">
-                {getMessageCount() > 9 ? '9+' : getMessageCount()}
-              </span>
-            )}
-          </button>
-        </div>
-      )}
+            {/* Tooltip Bubble */}
+            <motion.div
+              className="bg-zinc-800 text-zinc-100 px-4 py-2 rounded-full text-xs whitespace-nowrap shadow-lg border border-zinc-700 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+              initial={{ opacity: 0, y: 10 }}
+              whileHover={{ opacity: 1 }}
+              transition={{ duration: 0.15 }}
+            >
+              Ask me about Rahul's projects & experience
+            </motion.div>
+
+            {/* Floating Button */}
+            <motion.button
+              onClick={() => setIsOpen(true)}
+              className="relative flex items-center justify-center w-14 h-14 rounded-full bg-indigo-500 hover:bg-indigo-600 text-white shadow-lg transition-all duration-200 hover:scale-110 active:scale-95"
+              aria-label="Open chatbot"
+              title="Ask me about my projects, experience, and skills"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <MessageCircle size={24} />
+              {getMessageCount() > 0 && (
+                <motion.span
+                  className="absolute -top-1 -right-1 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: 'spring', stiffness: 200, damping: 10 }}
+                >
+                  {getMessageCount() > 9 ? '9+' : getMessageCount()}
+                </motion.span>
+              )}
+            </motion.button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Open State: Chat Panel */}
-      {isOpen && (
-        <div className="fixed bottom-4 right-4 z-50 w-full max-w-sm h-96 flex flex-col rounded-lg border border-zinc-800 bg-zinc-950 shadow-2xl">
+      <AnimatePresence mode="wait">
+        {isOpen && (
+          <motion.div
+            className="fixed bottom-4 right-4 z-50 w-full max-w-sm h-96 flex flex-col rounded-lg border border-zinc-800 bg-zinc-950 shadow-2xl"
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+          >
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-zinc-800">
             <div className="flex items-center gap-2">
@@ -228,40 +317,66 @@ export function Chatbot() {
             {uiMessages.length === 0 && !storageLoading ? (
               <>
                 {/* Default Greeting Message */}
-                <div className="flex justify-start">
-                  <div className="max-w-xs px-3 py-2 rounded-lg text-sm bg-zinc-800 text-zinc-100 rounded-bl-none">
+                <motion.div
+                  className="flex justify-start"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.1 }}
+                >
+                  <motion.div
+                    className="max-w-xs px-3 py-2 rounded-lg text-sm bg-zinc-800 text-zinc-100 rounded-bl-none"
+                    initial={{ scale: 0.95 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 0.2 }}
+                  >
                     <div className="break-words whitespace-pre-wrap">
                       Hey there! 👋 I'm here to help you learn about Rahul Kolli, a Full Stack Developer with 5+ years of experience building scalable systems, mobile apps, and AI-powered platforms.
 
 What would you like to know? Ask about his work at Eventzai, projects like OweMyGod, his tech stack, or anything else!
                     </div>
-                  </div>
-                </div>
+                  </motion.div>
+                </motion.div>
               </>
             ) : (
               <>
-                {uiMessages.map((message) => (
-                  <div
+                {uiMessages.map((message, index) => (
+                  <motion.div
                     key={message.id}
                     className={`flex ${
                       message.role === 'user' ? 'justify-end' : 'justify-start'
                     }`}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2, delay: index * 0.05 }}
                   >
-                    <div
+                    <motion.div
                       className={`max-w-xs px-3 py-2 rounded-lg text-sm ${
                         message.role === 'user'
                           ? 'bg-indigo-500 text-white rounded-br-none'
                           : 'bg-zinc-800 text-zinc-100 rounded-bl-none'
                       }`}
+                      whileInView={{ scale: 1 }}
+                      initial={{ scale: 0.95 }}
+                      transition={{ duration: 0.15 }}
                     >
                       <div className="break-words whitespace-pre-wrap">{message.content}</div>
-                    </div>
-                  </div>
+                    </motion.div>
+                  </motion.div>
                 ))}
 
                 {isLoading && (
-                  <div className="flex justify-start">
-                    <div className="bg-zinc-800 text-zinc-100 px-3 py-2 rounded-lg rounded-bl-none">
+                  <motion.div
+                    className="flex justify-start"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <motion.div
+                      className="bg-zinc-800 text-zinc-100 px-3 py-2 rounded-lg rounded-bl-none"
+                      initial={{ scale: 0.95 }}
+                      animate={{ scale: 1 }}
+                      transition={{ duration: 0.15 }}
+                    >
                       <div className="flex gap-1">
                         <div className="w-2 h-2 bg-zinc-500 rounded-full animate-bounce" />
                         <div
@@ -273,8 +388,8 @@ What would you like to know? Ask about his work at Eventzai, projects like OweMy
                           style={{ animationDelay: '0.2s' }}
                         />
                       </div>
-                    </div>
-                  </div>
+                    </motion.div>
+                  </motion.div>
                 )}
 
                 <div ref={messagesEndRef} />
@@ -304,6 +419,19 @@ What would you like to know? Ask about his work at Eventzai, projects like OweMy
                 className="flex-1 px-3 py-2 rounded bg-zinc-800 border border-zinc-700 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
               />
               <button
+                onClick={handleToggleSpeech}
+                disabled={isLoading || !rateLimitStatus.allowed}
+                className={`px-3 py-2 rounded transition-colors flex items-center justify-center ${
+                  isListening
+                    ? 'bg-red-500 hover:bg-red-600'
+                    : 'bg-zinc-700 hover:bg-zinc-600'
+                } disabled:bg-zinc-800 disabled:cursor-not-allowed`}
+                aria-label="Toggle speech input"
+                title={isListening ? 'Stop listening' : 'Start listening'}
+              >
+                {isListening ? <MicOff size={18} /> : <Mic size={18} />}
+              </button>
+              <button
                 onClick={handleSendMessage}
                 disabled={
                   isLoading ||
@@ -321,18 +449,75 @@ What would you like to know? Ask about his work at Eventzai, projects like OweMy
               </button>
             </div>
 
-            {/* Clear Button */}
-            {uiMessages.length > 0 && (
-              <button
-                onClick={handleClearConversation}
-                className="w-full text-xs py-1 px-2 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-zinc-300 transition-colors"
-              >
-                Clear conversation
-              </button>
-            )}
+            {/* Clear Button or Preview */}
+            <AnimatePresence mode="wait">
+              {!showClearPreview && uiMessages.length > 0 && (
+                <motion.button
+                  onClick={handleClearConversation}
+                  className="w-full text-xs py-1 px-2 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-zinc-300 transition-colors flex items-center justify-center gap-2"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  whileHover={{ backgroundColor: 'rgba(39, 39, 42, 0.8)' }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <Trash2 size={14} />
+                  Clear conversation
+                </motion.button>
+              )}
+
+              {showClearPreview && (
+                <motion.div
+                  className="p-3 rounded bg-zinc-900 border border-zinc-700 space-y-3"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <p className="text-xs text-zinc-300 font-medium">
+                    Clear {uiMessages.length} message{uiMessages.length !== 1 ? 's' : ''}?
+                  </p>
+
+                  {/* Message Preview */}
+                  <div className="max-h-32 overflow-y-auto space-y-1 bg-zinc-950 rounded p-2 border border-zinc-800">
+                    {uiMessages.map((msg) => (
+                      <div key={msg.id} className="text-xs text-zinc-500 line-clamp-2">
+                        <span className={msg.role === 'user' ? 'text-indigo-400' : 'text-zinc-400'}>
+                          {msg.role === 'user' ? 'You' : 'Assistant'}:
+                        </span>
+                        {' '}
+                        {msg.content}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex gap-2">
+                    <motion.button
+                      onClick={() => setShowClearPreview(false)}
+                      className="flex-1 text-xs py-1 px-2 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition-colors"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      Cancel
+                    </motion.button>
+                    <motion.button
+                      onClick={handleConfirmClear}
+                      className="flex-1 text-xs py-1 px-2 rounded bg-red-600 hover:bg-red-700 text-white transition-colors"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      Clear All
+                    </motion.button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
-        </div>
-      )}
+        </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
