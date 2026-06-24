@@ -8,7 +8,6 @@ import { VisitorCounter } from "./VisitorCounter";
 import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
-  { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/experience", label: "Experience" },
   { href: "/projects", label: "Projects" },
