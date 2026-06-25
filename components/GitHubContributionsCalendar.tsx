@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
@@ -54,9 +54,12 @@ function toBarHeight(count: number): number {
   return Math.min(4.8, 0.3 + Math.log2(count + 1) * 1.02);
 }
 
-function Bars({ cells }: { cells: ContributionCell[] }) {
+function Bars({ cells, isMobile }: { cells: ContributionCell[]; isMobile: boolean }) {
   return (
-    <group position={[-(Math.max(...cells.map((item) => item.x), 0) * 1.25) / 2, 0, -4.2]} scale={[1.3, 1.3, 1.2]}>
+    <group
+      position={[-(Math.max(...cells.map((item) => item.x), 0) * 1.25) / 2, 0, isMobile ? -3.5 : -4.2]}
+      scale={isMobile ? [0.95, 0.95, 0.9] : [1.3, 1.3, 1.2]}
+    >
       {cells.map((cell) => {
         const height = toBarHeight(cell.count);
 
@@ -149,16 +152,33 @@ function getContributionStats(data: Array<{ date: string; count: number }>) {
   let currentStart = "";
   let currentEnd = "";
 
+  // Find the most recent day with contributions, then count backwards
+  let lastContributionIndex = -1;
   for (let i = sorted.length - 1; i >= 0; i -= 1) {
-    const day = sorted[i];
-    if (day.count <= 0) {
+    if (sorted[i].count > 0) {
+      lastContributionIndex = i;
       break;
     }
+  }
 
-    currentStreak += 1;
-    currentStart = day.date;
-    if (!currentEnd) {
-      currentEnd = day.date;
+  // If we found a recent contribution, count the streak from that point backwards
+  if (lastContributionIndex >= 0) {
+    currentEnd = sorted[lastContributionIndex].date;
+    
+    for (let i = lastContributionIndex; i >= 0; i -= 1) {
+      const day = sorted[i];
+      
+      if (day.count <= 0) {
+        break; // Stop when we hit a day with no contributions
+      }
+
+      // Verify this is the next consecutive day (or the first day in the streak)
+      if (i < lastContributionIndex && !isNextDay(sorted[i + 1].date, day.date)) {
+        break; // Gap detected, stop the streak
+      }
+
+      currentStreak += 1;
+      currentStart = day.date;
     }
   }
 
@@ -177,6 +197,14 @@ function getContributionStats(data: Array<{ date: string; count: number }>) {
 
 export function GitHubContributionsCalendar() {
   const { data, isLoading, error } = useGitHubContributions("rahulkolli98");
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   const cells = useMemo(() => {
     return buildGrid(
@@ -225,13 +253,17 @@ export function GitHubContributionsCalendar() {
         </div>
       </div>
 
-      <div className="relative left-1/2 w-screen max-w-none -translate-x-1/2 overflow-x-auto px-4 sm:px-8">
-        <div className="h-[440px] min-w-[1050px]">
-          <Canvas shadows dpr={[1, 2]} camera={{ position: [28, 20, 30], fov: 38 }}>
+      <div className="flex justify-center">
+        <div className="h-[280px] w-full sm:h-[440px]">
+          <Canvas
+            shadows
+            dpr={[1, 2]}
+            camera={{ position: isMobile ? [16, 12, 18] : [28, 20, 30], fov: isMobile ? 50 : 38 }}
+          >
           <ambientLight intensity={0.65} />
           <directionalLight position={[14, 24, 10]} intensity={1.1} castShadow />
 
-          <Bars cells={cells} />
+          <Bars cells={cells} isMobile={isMobile} />
 
           <OrbitControls
             enablePan={false}
